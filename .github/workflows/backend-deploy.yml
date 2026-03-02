@@ -1,0 +1,50 @@
+name: Deploy Backend to EC2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-deploy.yml'
+
+jobs:
+  deploy:
+    name: Deploy to EC2 via SSH
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+
+            echo "--- Navigating to project directory ---"
+            cd /var/www/ocr-po
+
+            echo "--- Pulling latest code from GitHub ---"
+            git pull origin main
+
+            echo "--- Installing/updating backend dependencies ---"
+            cd backend
+            npm install --omit=dev
+
+            echo "--- Creating necessary directories ---"
+            mkdir -p uploads output
+            sudo mkdir -p /var/log/pm2
+
+            echo "--- Restarting backend with PM2 ---"
+            pm2 startOrReload ecosystem.config.js --env production
+
+            echo "--- Saving PM2 process list ---"
+            pm2 save
+
+            echo "✅ Deployment complete!"

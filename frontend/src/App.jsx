@@ -3,6 +3,7 @@ import axios from 'axios'
 import FileUpload from './components/FileUpload'
 import ResultPreview from './components/ResultPreview'
 import ProductDatabaseModal from './components/ProductDatabaseModal'
+import API_BASE_URL from './config'
 import './index.css'
 
 function App() {
@@ -20,7 +21,7 @@ function App() {
     setProgress({ percentage: 0, message: 'Connecting to server...' })
 
     // Setup SSE connection
-    const eventSource = new EventSource('http://localhost:5000/api/ocr/stream-progress')
+    const eventSource = new EventSource(`${API_BASE_URL}/api/ocr/stream-progress`)
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
@@ -36,7 +37,7 @@ function App() {
     formData.append('model', model)
 
     try {
-      const response = await axios.post('http://localhost:5000/api/ocr/upload', formData, {
+      const response = await axios.post(`${API_BASE_URL}/api/ocr/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

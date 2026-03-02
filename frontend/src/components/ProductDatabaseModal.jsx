@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 
 const ProductDatabaseModal = ({ onClose }) => {
     const [products, setProducts] = useState([]);
@@ -20,7 +21,7 @@ const ProductDatabaseModal = ({ onClose }) => {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/products');
+            const response = await axios.get(`${API_BASE_URL}/api/products`);
             setProducts(response.data);
             setError(null);
         } catch (err) {
@@ -83,9 +84,9 @@ const ProductDatabaseModal = ({ onClose }) => {
 
         try {
             if (editingId) {
-                await axios.put(`http://localhost:5000/api/products/${editingId}`, payload);
+                await axios.put(`${API_BASE_URL}/api/products/${editingId}`, payload);
             } else {
-                await axios.post('http://localhost:5000/api/products', payload);
+                await axios.post(`${API_BASE_URL}/api/products`, payload);
             }
             setIsFormOpen(false);
             fetchProducts();
@@ -98,7 +99,7 @@ const ProductDatabaseModal = ({ onClose }) => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                await axios.delete(`http://localhost:5000/api/products/${id}`);
+                await axios.delete(`${API_BASE_URL}/api/products/${id}`);
                 fetchProducts();
             } catch (err) {
                 console.error('Failed to delete product:', err);
