@@ -11,7 +11,7 @@ module.exports = {
             env: {
                 NODE_ENV: 'production',
                 PORT: 5001
-                // Do NOT put secrets here. They are loaded from the .env file via dotenv in server.js
+                // Do NOT put secrets here. They are loasded from the .env file via dotenv in server.js
             },
             // Logging
             error_file: '/var/log/pm2/ocr-po-error.log',
