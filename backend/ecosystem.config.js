@@ -10,7 +10,7 @@ module.exports = {
             max_memory_restart: '512M',
             env: {
                 NODE_ENV: 'production',
-                PORT: 5000
+                PORT: 5001
                 // Do NOT put secrets here. They are loaded from the .env file via dotenv in server.js
             },
             // Logging
